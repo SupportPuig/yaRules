@@ -1,0 +1,30 @@
+title: bumblebee_wmi_calls
+status: tested
+description: Detects WMI calls maded by Bumblebee
+author: NaxoneZ
+date: 2022/08/24
+
+fields:
+    - TimeCreated
+    - EventId
+    - Channel
+    - UserId
+    - ExecutableInfo
+    
+logsource:
+    category: log_created
+    table: logs
+    channel: Microsoft-Windows-WMI-Activity/Operational
+    source_name: Microsoft-Windows-WMI
+
+detection:
+    selection:
+        - event_identifier: 5858
+
+    selection1:
+        - message|contains: 
+            - SELECT * FROM Win32_OperatingSystem
+            - SELECT * FROM Win32_ComputerSystem
+            - SELECT * FROM Win32_ComputerSystemProduct
+
+    condition: selection and selection1 | count(*) >= 3

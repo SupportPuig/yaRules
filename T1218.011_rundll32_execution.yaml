@@ -1,0 +1,30 @@
+title: T1218.011_rundll32_execution
+status: tested
+description: Detects potential rundll32.exe malicious calls
+author: NaxoneZ
+date: 2022/08/24
+
+fields:
+    - TimeCreated
+    - EventId
+    - Channel
+    - UserId
+    - ExecutableInfo
+    
+logsource:
+    category: log_created
+    table: logs
+    channel: Security
+    source_name: Security
+
+detection:
+    selection:
+        - event_identifier: 4688
+
+    selection1:
+        - message|contains|all:
+            - cmd.exe /C
+            - rundll32.exe
+            - ,
+
+    condition: selection and selection1
